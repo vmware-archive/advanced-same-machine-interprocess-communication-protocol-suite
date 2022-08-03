@@ -1,0 +1,27 @@
+{
+   // See https://go.microsoft.com/fwlink/?LinkId=733558
+   // for the documentation about the tasks.json format
+   "version": "2.0.0",
+   "tasks": [
+      {
+         "label": "Run unit_test with code coverage",
+         "type": "shell",
+         "command": "cmake -S. -Bbuild -DENABLE_COVERAGE=ON && cmake --build build --target test unit_test-genhtml",
+         "problemMatcher": [],
+         "group": {
+            "kind": "test",
+            "isDefault": true
+         }
+      },
+      {
+         "label": "Generate doxygen documentation",
+         "type": "shell",
+         "command": "cmake -S. -Bbuild -Dp_build_doc=ON && cmake --build build --target docs_doxygen",
+         "problemMatcher": [],
+         "group": {
+            "kind": "test",
+            "isDefault": true
+         }
+      },
+   ]
+}
