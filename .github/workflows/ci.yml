@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Debug
+
+jobs:
+  Build-Test-Cpp-Debug:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ${{github.workspace}}/cpp
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Configure CMake
+      run: cmake -S . -B ./build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DENABLE_COVERAGE=On
+
+    - name: Build
+      # Build your program with the given configuration
+      run: cmake --build ./build --config ${{env.BUILD_TYPE}}
+
+    - name: Unit Test
+      run: (cd ./build/unit_tests && make test unit_test-gcov)
+      
+  Build-Test-Cpp-Release:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ${{github.workspace}}/cpp
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Configure CMake
+      run: cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Release
+
+    - name: Build
+      # Build your program with the given configuration
+      run: cmake --build ./build --config Release
+
+    - name: System Test
+      run: (cd ./build/system_tests && make test)
