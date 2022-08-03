@@ -1,6 +1,6 @@
-# Contributing to advanced-same-machine-interprocess-communication-protocol-suite
+# Contributing to Advanced Same Machine Interprocess Communication Protocol Suite
 
-The advanced-same-machine-interprocess-communication-protocol-suite project team welcomes contributions from the community. Before you start working with advanced-same-machine-interprocess-communication-protocol-suite, please
+The Advanced Same Machine Interprocess Communication Protocol Suite (or Toroni for short) project team welcomes contributions from the community. Before you start working with advanced-same-machine-interprocess-communication-protocol-suite, please
 read our [Developer Certificate of Origin](https://cla.vmware.com/dco). All contributions to this repository must be
 signed as described on that page. Your signature certifies that you wrote the patch or have the right to pass it on
 as an open-source patch.
