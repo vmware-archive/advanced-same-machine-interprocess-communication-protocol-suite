@@ -101,10 +101,10 @@ In order for the container to be detected you need to open the cpp folder within
 The detail dirs contain implementation details not indended to be used by clients. The traits dir contain default implementations of types that need to be included explicitly and are used by Toroni and which can be replaced by clients with custom implementations.
 
 ## Contributing
-The advanced-same-machine-interprocess-communication-protocol-suite project team welcomes contributions from the community. Before you start working with advanced-same-machine-interprocess-communication-protocol-suite, please
+The Advanced Same Machine Interprocess Communication Protocol Suite project team welcomes contributions from the community. Before you start working with Advanced Same Machine Interprocess Communication Protocol Suite, please
 read our [Developer Certificate of Origin](https://cla.vmware.com/dco). All contributions to this repository must be
 signed as described on that page. Your signature certifies that you wrote the patch or have the right to pass it on
 as an open-source patch. For more detailed information, refer to [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
-advanced-same-machine-interprocess-communication-protocol-suite is available under the [Apache 2 license](LICENSE).
+Advanced Same Machine Interprocess Communication Protocol Suite is available under the [Apache 2 license](LICENSE).
