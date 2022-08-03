@@ -1,3 +1,8 @@
+/*
+ * Copyright 2022 VMware, Inc.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 #include "toroni/traits/concurrent/mpscMessageQueue.hpp"
 #include "toroni/traits/concurrent/serialWorkQueue.hpp"
 #include "toroni/traits/posix/multicastUdpNotification.hpp"

@@ -1,3 +1,8 @@
+#
+# Copyright 2022 VMware, Inc.
+# SPDX-License-Identifier: Apache-2.0
+#
+
 cmake_minimum_required(VERSION 3.18)
 
 project(toroni VERSION 0.1.0 LANGUAGES CXX)

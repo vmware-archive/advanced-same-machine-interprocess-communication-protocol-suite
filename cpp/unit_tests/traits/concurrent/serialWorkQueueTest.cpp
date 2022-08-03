@@ -1,3 +1,8 @@
+/*
+ * Copyright 2022 VMware, Inc.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 #include "toroni/traits/concurrent/serialWorkQueue.hpp" // for SerialWorkIt...
 #include "toroni/ref.hpp"                               // for Ref, toroni
 

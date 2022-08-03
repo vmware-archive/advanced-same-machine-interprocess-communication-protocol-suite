@@ -1,3 +1,8 @@
+#
+# Copyright 2022 VMware, Inc.
+# SPDX-License-Identifier: Apache-2.0
+#
+
 # first we can indicate the documentation build as an option and set it to ON by default
 option(p_build_doc "Build documentation" OFF)
 

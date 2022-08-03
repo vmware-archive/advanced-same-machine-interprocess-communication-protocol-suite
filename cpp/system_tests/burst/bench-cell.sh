@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright 2022 VMware, Inc.
+# SPDX-License-Identifier: Apache-2.0
 
 # Test with message bursts using many readers and writers over several iterations.
 

@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright 2022 VMware, Inc.
+# SPDX-License-Identifier: Apache-2.0
 
 # Run a matrix of tests. Type of test is set by
 #export TORONI_AGENT_TEST_FLAVOR=FIRST_LAST_DURATION

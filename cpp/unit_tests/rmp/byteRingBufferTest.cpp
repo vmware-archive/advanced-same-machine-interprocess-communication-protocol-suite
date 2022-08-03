@@ -1,3 +1,8 @@
+/*
+ * Copyright 2022 VMware, Inc.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 #include "byteRingBufferTest.hpp"
 
 using namespace toroni::rmp::unit_tests;

@@ -1,3 +1,8 @@
+/*
+ * Copyright 2022 VMware, Inc.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 #include "toroni/rmp/reader.hpp"
 #include "toroni/rmp/readerWithBackpressure.hpp"
 #include "toroni/rmp/writer.hpp"

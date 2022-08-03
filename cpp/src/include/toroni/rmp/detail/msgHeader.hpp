@@ -1,3 +1,8 @@
+/*
+ * Copyright 2022 VMware, Inc.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 #ifndef TORONI_RMP_DETAIL_MSGHEADER_HPP
 #define TORONI_RMP_DETAIL_MSGHEADER_HPP
 
