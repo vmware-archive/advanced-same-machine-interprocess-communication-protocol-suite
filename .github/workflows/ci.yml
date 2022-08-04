@@ -28,7 +28,10 @@ jobs:
 
     - name: Unit Test
       run: (cd ./build/unit_tests && make test unit_test-gcov)
-      
+
+    - name: Upload Unit Test Coverage
+      run: (cd ./build/src/ &&  bash <(curl -s https://codecov.io/bash) -t  ${{ secrets.CODECOV }} -v)
+  
   Build-Test-Cpp-Release:
     runs-on: ubuntu-latest
 
