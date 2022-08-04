@@ -1,4 +1,5 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![codecov](https://codecov.io/gh/vmware-labs/advanced-same-machine-interprocess-communication-protocol-suite/branch/main/graph/badge.svg?token=MM49G1ZUL0)](https://codecov.io/gh/vmware-labs/advanced-same-machine-interprocess-communication-protocol-suite)
 
 # Advanced Same Machine Interprocess Communication Protocol Suite
 ## Overview
