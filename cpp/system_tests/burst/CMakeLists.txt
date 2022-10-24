@@ -23,6 +23,7 @@ configure_file(bench-table.sh bench-table.sh COPYONLY)
 configure_file(stress-no-expire.sh stress-no-expire.sh COPYONLY)
 configure_file(robust-writer.sh robust-writer.sh COPYONLY)
 configure_file(robust-reader.sh robust-reader.sh COPYONLY)
+configure_file(setup-agent.sh setup-agent.sh COPYONLY)
 
 add_test(NAME SystemTests/StressNoExpire COMMAND ./stress-no-expire.sh)
 add_test(NAME SystemTests/RobustWriter COMMAND ./robust-writer.sh)

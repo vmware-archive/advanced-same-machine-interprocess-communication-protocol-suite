@@ -81,7 +81,7 @@ AgentStats *AgentStatsPtr() {
 }
 
 MulticastUdpNotification &UdpNotification() {
-  static MulticastUdpNotification un{"226.1.1.1", 3334, "127.0.0.1"};
+  static MulticastUdpNotification un{"224.1.1.1", 3334, "127.0.0.1"};
   return un;
 }
 

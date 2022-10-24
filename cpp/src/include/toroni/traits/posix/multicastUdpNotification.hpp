@@ -49,7 +49,7 @@ inline MulticastUdpNotification::MulticastUdpNotification(const char *mcastIp,
   /* Enable SO_REUSEADDR to allow multiple instances of this */
   /* application to receive copies of the multicast datagrams. */
   int reuse = 1;
-  if (setsockopt(_sd, SOL_SOCKET, SO_REUSEPORT,
+  if (setsockopt(_sd, SOL_SOCKET, SO_REUSEADDR,
                  reinterpret_cast<char *>(&reuse), sizeof(reuse)) < 0) {
     close(_sd);
     throw exception("Setting SO_REUSEADDR error");

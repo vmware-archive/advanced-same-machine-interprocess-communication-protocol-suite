@@ -31,7 +31,7 @@ jobs:
 
     - name: Upload Unit Test Coverage
       run: (cd ./build/src/ &&  bash <(curl -s https://codecov.io/bash) -t  ${{ secrets.CODECOV }} -v)
-  
+      
   Build-Test-Cpp-Release:
     runs-on: ubuntu-latest
 
@@ -50,4 +50,36 @@ jobs:
       run: cmake --build ./build --config Release
 
     - name: System Test
-      run: (cd ./build/system_tests && make test)
+      run: (cd ./build/system_tests && ctest --timeout 180)
+
+  Build-Test-Java:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ${{github.workspace}}/java/toroni
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'adopt'
+  
+    - name: Build
+      run: mvn install -DskipTests
+
+    - name: Setup multicast
+      run: (cd ${{github.workspace}}/interop-tests && sudo bash setup-multicast.sh)
+
+#    - name: Setup upterm session
+#      uses: lhotari/action-upterm@v1
+
+    - name: Unit Test
+      run: mvn test
+
+    - name: System Test
+      run: (cd ./src/test/java/toroni/system_tests && cmake -S . -B ./build && cmake --build ./build && cd build && ctest --timeout 180)
+
+    - name: Interop Test (cpp-java)
+      run:  (cd ${{github.workspace}} && docker run --privileged $(docker build -q -f ./interop-tests/cpp-java.Dockerfile .))

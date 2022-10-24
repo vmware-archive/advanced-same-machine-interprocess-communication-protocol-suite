@@ -1,8 +1,9 @@
 #!/bin/bash
 # Copyright 2022 VMware, Inc.
 # SPDX-License-Identifier: Apache-2.0
-
 set -e
+
+source setup-agent.sh
 
 # Test that
 # - a writer that crashes holding the RingBuffer lock
@@ -16,40 +17,40 @@ export TORONI_AGENT_READERS_MAX=16
 export TORONI_AGENT_READERS=1
 export TORONI_AGENT_WRITERS=1
 
-./agent init
+$TORONI_AGENT_DEFAULT init
 
 # This reader will block forever on reading
-./agent read &
+$TORONI_AGENT_READER read &
 r1pid=$!
 
 # This writer will exit on backpressure holding robust lock
-./agent write
+$TORONI_AGENT_WRITER write
 
 # Get the blocked reader out of the way
 kill $r1pid
 
 # Assert 0 messages are read so far
-./agent cmprcved 0
+$TORONI_AGENT_DEFAULT cmprcved 0
 
 export TORONI_AGENT_TEST_FLAVOR=LATENCY # Causes writer to write and reader to read
 
 # Start a reader that will read messages
-./agent read &
+$TORONI_AGENT_READER read &
 r2pid=$!
 
 # Wait for it to start
 sleep 1s
 
-./agent write
+$TORONI_AGENT_WRITER write
 
 # Wait for reader to get messages
 wait $r2pid
 
 # Assert 2 messages are read
-./agent cmprcved $TORONI_AGENT_MESSAGES_PER_WRITER
+$TORONI_AGENT_DEFAULT cmprcved $TORONI_AGENT_MESSAGES_PER_WRITER
 EC=$?
 
 # Clean up /dev/shm
-./agent unlink
+$TORONI_AGENT_DEFAULT unlink
 
 exit $EC
