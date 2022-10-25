@@ -5,18 +5,19 @@
 
 package toroni.rmp;
 
-import com.sun.jna.Pointer;
-
 public class CopyConfirmHandler implements CopyConfirmCallback {
+  private ByteRingBuffer _ringBuf;
   private ReadCallback _readCb;
   private byte[] _data;
 
-  public CopyConfirmHandler(ReadCallback readCb) {
+  public CopyConfirmHandler(ByteRingBuffer ringBuf, ReadCallback readCb) {
+    _ringBuf = ringBuf;
     _readCb = readCb;
   }
 
-  public boolean copy(Pointer data, long dataLength) {
-    _data = data.getByteArray(0, (int) dataLength);
+  public boolean copy(long index, long dataLength) {
+    _data = new byte[(int) dataLength];
+    _ringBuf.getBytes(index, dataLength, _data);
     return true;
   }
 

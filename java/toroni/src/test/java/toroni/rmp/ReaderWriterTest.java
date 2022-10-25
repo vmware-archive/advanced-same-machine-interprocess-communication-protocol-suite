@@ -12,6 +12,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.Assertions;
@@ -41,19 +43,26 @@ class ReaderWriterTest {
   private int maxIntMsg;
 
   private class ReadIntCopyConfirmHandler implements CopyConfirmCallback {
-
-    private int tmpData;
+    private ByteRingBuffer _ringBuf;
+    private int _tmpData;
     public ArrayList<Integer> data = new ArrayList<Integer>();
 
+    public ReadIntCopyConfirmHandler(ByteRingBuffer ringBuf) {
+      _ringBuf = ringBuf;
+    }
+
     @Override
-    public boolean copy(Pointer data, long dataLength) {
-      tmpData = data.getInt(0);
+    public boolean copy(long index, long dataLength) {
+      ByteBuffer bb = ByteBuffer.allocate((int) dataLength);
+      _ringBuf.getBytes(index, dataLength, bb.array());
+      bb.order(ByteOrder.LITTLE_ENDIAN);
+      _tmpData = bb.getInt();
       return true;
     }
 
     @Override
     public void confirm() {
-      data.add(tmpData);
+      data.add(_tmpData);
     }
 
   }
@@ -115,7 +124,7 @@ class ReaderWriterTest {
 
     mockBPHandler = Mockito.mock(BackPressureCallback.class);
 
-    readHandler = new ReadIntCopyConfirmHandler();
+    readHandler = new ReadIntCopyConfirmHandler(ringBuf);
 
     maxIntMsg = (int) (ringBuf.getBufSize() / (MessageHeader.size() + Integer.BYTES));
   }
@@ -258,7 +267,7 @@ class ReaderWriterTest {
       public int confirmCount = 0;
 
       @Override
-      public boolean copy(Pointer data, long dataLength) {
+      public boolean copy(long index, long dataLength) {
         copyCount += dataLength;
         return false;
       }

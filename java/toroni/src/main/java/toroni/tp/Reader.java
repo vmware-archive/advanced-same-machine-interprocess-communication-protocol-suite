@@ -29,6 +29,7 @@ public class Reader {
     public void run(ChannelReaderEventType et);
   }
 
+  private ByteRingBuffer _ringBuf;
   private ReaderInfo _readerInfo;
   private ReaderWithBackpressure _rmpReaderBp;
   private EnqueueSerialFn _enqueueSerialReader;
@@ -38,6 +39,7 @@ public class Reader {
 
   public Reader(ByteRingBuffer ringBuf, ReaderInfo readerInfo, EnqueueSerialFn serialReadFn,
       EnqueueSerialFn rmpReadFn, ChannelReaderEventCallback eventCb) throws Exception {
+    _ringBuf = ringBuf;
     _readerInfo = readerInfo;
     try {
       _rmpReaderBp = new ReaderWithBackpressure(ringBuf, readerInfo.rmpReaderInfo);
@@ -157,20 +159,21 @@ public class Reader {
       return;
     }
 
-    CopyConfirmHandler cch = new CopyConfirmHandler(new ReadCallback() {
+    CopyConfirmHandler cch = new CopyConfirmHandler(
+        _ringBuf, new ReadCallback() {
 
-      @Override
-      public void messageRecieved(byte[] data) {
-        for (ChannelReader cr : channelReaders) {
-          TopicMsgDeserializer.ResultMessagePair deserialized = TopicMsgDeserializer.deserializeAndFilter(
-              data, cr._readerGen, cr._name, cr._handleDescendants);
-          if (deserialized.result) {
-            cr._handler.run(deserialized.message);
+          @Override
+          public void messageRecieved(byte[] data) {
+            for (ChannelReader cr : channelReaders) {
+              TopicMsgDeserializer.ResultMessagePair deserialized = TopicMsgDeserializer.deserializeAndFilter(
+                  data, cr._readerGen, cr._name, cr._handleDescendants);
+              if (deserialized.result) {
+                cr._handler.run(deserialized.message);
+              }
+            }
           }
-        }
-      }
 
-    });
+        });
 
     Result res = _rmpReaderBp.readEx(cch);
 

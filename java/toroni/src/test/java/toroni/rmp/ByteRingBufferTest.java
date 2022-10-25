@@ -5,6 +5,7 @@
 
 package toroni.rmp;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -69,4 +70,14 @@ class ByteRingBufferTest {
     }
   }
 
+  @Test
+  void setGetBytes() {
+    byte[] bin = { 1, 2, 3, 4, 5 };
+    ringBuf.setBytes(0, bin);
+
+    byte[] bout = new byte[bin.length];
+    ringBuf.getBytes(0, bin.length, bout);
+
+    assertArrayEquals(bin, bout);
+  }
 }

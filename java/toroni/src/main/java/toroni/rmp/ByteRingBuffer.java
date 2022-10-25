@@ -212,13 +212,25 @@ public class ByteRingBuffer {
 
   /**
    * Writes the byte array {@code data} starting at position {@code index} in the
-   * buffer.
+   * ring buffer.
    * 
    * @param index
    * @param data
    */
   public void setBytes(long index, byte[] data) {
     _unsafe.copyMemory(data, byteArrayOffset, null, BUFFER_ADDRESS + index, data.length);
+  }
+
+  /**
+   * Reads (@code length) bytes from the ring buffer starting at {@code index}
+   * into {@code data}.
+   * 
+   * @param index
+   * @param length
+   * @param data
+   */
+  public void getBytes(long index, long length, byte[] data) {
+    _unsafe.copyMemory(null, BUFFER_ADDRESS + index, data, byteArrayOffset, length);
   }
 
   /**

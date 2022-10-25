@@ -13,13 +13,13 @@ import com.sun.jna.Pointer;
 public interface CopyConfirmCallback {
 
   /**
-   * Copies data to local storage.
+   * Copies {@code length} bytes starting from {@index} data to local storage.
    * 
-   * @param data
-   * @param dataLength
+   * @param index
+   * @param length
    * @return true if successful, false otherwise
    */
-  boolean copy(Pointer data, long dataLength);
+  boolean copy(long index, long length);
 
   /**
    * Invokes a callback once the data has been confirmed.
