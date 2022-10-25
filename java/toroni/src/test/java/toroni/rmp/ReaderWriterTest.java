@@ -23,12 +23,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import toroni.rmp.detail.MessageHeader;
 import toroni.traits.PthreadRobustMutex;
-import toroni.traits.RobustMutex;
 
 class ReaderWriterTest {
-
-  private final int MUTEX_SIZE_BYTES = 40;
-
   private Writer writer;
   private ReaderWithBackpressure readerBP;
   private BackPressureCallback noBPHandler;
@@ -66,12 +62,8 @@ class ReaderWriterTest {
   void initRingBuf() {
     long bufSize = 1024;
 
-    Pointer mtxPointer = new Memory(MUTEX_SIZE_BYTES);
-    RobustMutex mtx = new PthreadRobustMutex(mtxPointer);
-    mtx.initialize();
-
     Pointer ringBufPointer = new Memory(ByteRingBuffer.size(bufSize, PthreadRobustMutex.getSize()));
-    ringBuf = new ByteRingBuffer(ringBufPointer, bufSize, mtx);
+    ringBuf = new ByteRingBuffer(ringBufPointer, bufSize, new PthreadRobustMutex());
 
     ringBuf.initialize();
   }
@@ -79,19 +71,9 @@ class ReaderWriterTest {
   void initReaderInfo() {
     short maxReaders = 3;
 
-    Pointer[] mtxPointers = { new Memory(MUTEX_SIZE_BYTES),
-        new Memory(MUTEX_SIZE_BYTES),
-        new Memory(MUTEX_SIZE_BYTES) };
+    Pointer readerInfoPointer = new Memory(ReaderInfo.size(maxReaders, PthreadRobustMutex.getSize()));
 
-    RobustMutex[] locks = new PthreadRobustMutex[maxReaders];
-    for (int i = 0; i < maxReaders; i++) {
-      locks[i] = new PthreadRobustMutex(mtxPointers[i]);
-      locks[i].initialize();
-    }
-
-    Pointer readerInfoPointer = new Memory(ReaderInfo.size(maxReaders, MUTEX_SIZE_BYTES));
-
-    readerInfo = new ReaderInfo(readerInfoPointer, maxReaders, locks);
+    readerInfo = new ReaderInfo(readerInfoPointer, maxReaders, new PthreadRobustMutex());
     readerInfo.initialize();
   }
 

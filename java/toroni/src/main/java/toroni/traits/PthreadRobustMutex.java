@@ -22,13 +22,9 @@ public class PthreadRobustMutex implements RobustMutex {
 
   private Pointer _mtx;
 
-  /**
-   * Creates a pthread robust mutex.
-   * 
-   * param mtx: a pointer to memory where the mutex should be initialized
-   */
-  public PthreadRobustMutex(Pointer mtx) {
-    _mtx = mtx;
+  @Override
+  public RobustMutex create() {
+    return new PthreadRobustMutex();
   }
 
   /**
@@ -36,8 +32,8 @@ public class PthreadRobustMutex implements RobustMutex {
    * pointer.
    */
   @Override
-  public void initialize() {
-    assert (_mtx != null);
+  public void initialize(Pointer mtx) {
+    _mtx = mtx;
 
     Pointer attr = new Memory(32);
     PTHREAD.pthread_mutexattr_init(attr);

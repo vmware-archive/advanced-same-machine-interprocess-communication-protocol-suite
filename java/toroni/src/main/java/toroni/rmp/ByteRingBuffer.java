@@ -24,6 +24,7 @@ public class ByteRingBuffer {
 
   public final long RING_BUF_ADDRESS;
   public final long BUF_SIZE_ADDRESS;
+  public final long MTX_ADDRESS;
   public final long FREE_POS_ADDRESS;
   public final long STAT_BACK_PRESSURE_COUNT_ADDRESS;
   public final long STAT_NOTIFICATION_COUNT_ADDRESS;
@@ -68,6 +69,7 @@ public class ByteRingBuffer {
 
     RING_BUF_ADDRESS = Pointer.nativeValue(_ringBufPointer);
     BUF_SIZE_ADDRESS = RING_BUF_ADDRESS + BUF_SIZE_OFFSET;
+    MTX_ADDRESS = RING_BUF_ADDRESS + MTX_OFFSET;
     FREE_POS_ADDRESS = RING_BUF_ADDRESS + FREE_POS_OFFSET;
     STAT_BACK_PRESSURE_COUNT_ADDRESS = RING_BUF_ADDRESS + STAT_BACK_PRESSURE_COUNT_OFFSET;
     STAT_NOTIFICATION_COUNT_ADDRESS = RING_BUF_ADDRESS + STAT_NOTIFICATION_COUNT_OFFSET;
@@ -80,6 +82,7 @@ public class ByteRingBuffer {
    */
   public void initialize() {
     _unsafe.putLong(BUF_SIZE_ADDRESS, _bufSize);
+    _mtx.initialize(new Pointer(MTX_ADDRESS));
     setFreePos(0);
     setStatBackPressureCount(0);
     setStatNotificationCount(0);

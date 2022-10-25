@@ -18,9 +18,6 @@ import toroni.traits.PthreadRobustMutex;
 import toroni.traits.RobustMutex;
 
 class ByteRingBufferTest {
-
-  private final int MUTEX_SIZE_BYTES = 40;
-
   private long bufSize;
   private ByteRingBuffer ringBuf;
 
@@ -28,9 +25,9 @@ class ByteRingBufferTest {
   void init() {
     bufSize = 1024;
 
-    Pointer mtxPointer = new Memory(MUTEX_SIZE_BYTES);
-    RobustMutex mtx = new PthreadRobustMutex(mtxPointer);
-    mtx.initialize();
+    Pointer mtxPointer = new Memory(PthreadRobustMutex.getSize());
+    RobustMutex mtx = new PthreadRobustMutex();
+    mtx.initialize(mtxPointer);
 
     Pointer ringBufPointer = new Memory(ByteRingBuffer.size(bufSize, PthreadRobustMutex.getSize()));
     ringBuf = new ByteRingBuffer(ringBufPointer, bufSize, mtx);

@@ -10,10 +10,17 @@ import com.sun.jna.Pointer;
 public interface RobustMutex {
 
   /**
-   * Initializes a new robust mutex in the momory provided by the argument
+   * Factory method
+   * 
+   * @return
+   */
+  RobustMutex create();
+
+  /**
+   * Initializes a new robust mutex in the memory provided by the argument
    * pointer.
    */
-  void initialize();
+  void initialize(Pointer mtx);
 
   /**
    * Returns the size of the mutex in memory.

@@ -27,7 +27,6 @@ import toroni.tp.Reader.ChannelReaderEventType;
 import toroni.traits.MulticastUdpNotification;
 import toroni.traits.PosixSharedMemoryFactory;
 import toroni.traits.PthreadRobustMutex;
-import toroni.traits.RobustMutex;
 import toroni.traits.SharedMemory;
 
 public class Agent {
@@ -66,26 +65,15 @@ public class Agent {
           AgentStats.size(),
           S_IRUSR | S_IWUSR);
 
-      RobustMutex mtx = new PthreadRobustMutex(new Pointer(Pointer.nativeValue(ringBufShm.ptr()) + Long.BYTES));
-      mtx.initialize();
       ringBuf = new ByteRingBuffer(
           ringBufShm.ptr(),
           Config.getOptRingBufSize(),
-          mtx);
+          new PthreadRobustMutex());
 
       short maxReaders = (short) Config.getOptMaxReaders();
 
-      RobustMutex[] locks = new PthreadRobustMutex[maxReaders];
-      for (int i = 0; i < maxReaders; i++) {
-        long lockAddress = Pointer.nativeValue(readerInfoShm.ptr())
-            + toroni.tp.ReaderInfo.RMP_READER_INFO_OFFSET
-            + toroni.rmp.ReaderInfo.FIRST_INFO_OFFSET
-            + i * toroni.rmp.ReaderInfoInfo.size(PthreadRobustMutex.getSize());
-
-        locks[i] = new PthreadRobustMutex(new Pointer(lockAddress));
-      }
-
-      readerInfo = new toroni.tp.ReaderInfo(readerInfoShm.ptr(), maxReaders, locks);
+      readerInfo = new toroni.tp.ReaderInfo(readerInfoShm.ptr(), maxReaders,
+          new PthreadRobustMutex());
 
       rmpReaderInfo = readerInfo.rmpReaderInfo;
 

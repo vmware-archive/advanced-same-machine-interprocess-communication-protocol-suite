@@ -18,33 +18,17 @@ import com.sun.jna.Pointer;
 import com.sun.jna.Memory;
 
 import toroni.traits.PthreadRobustMutex;
-import toroni.traits.RobustMutex;
 
 class ReaderInfoTest {
-  private final int MUTEX_SIZE_BYTES = 40;
-
   private short maxReaders;
   private ReaderInfo readerInfo;
 
   @BeforeEach
   void init() {
     maxReaders = 3;
+    Pointer readerInfoPointer = new Memory(ReaderInfo.size(maxReaders, PthreadRobustMutex.getSize()));
 
-    Pointer[] mtxPointers = {
-        new Memory(MUTEX_SIZE_BYTES),
-        new Memory(MUTEX_SIZE_BYTES),
-        new Memory(MUTEX_SIZE_BYTES)
-    };
-
-    RobustMutex[] locks = new PthreadRobustMutex[maxReaders];
-    for (int i = 0; i < maxReaders; i++) {
-      locks[i] = new PthreadRobustMutex(mtxPointers[i]);
-      locks[i].initialize();
-    }
-
-    Pointer readerInfoPointer = new Memory(ReaderInfo.size(maxReaders, MUTEX_SIZE_BYTES));
-
-    readerInfo = new ReaderInfo(readerInfoPointer, maxReaders, locks);
+    readerInfo = new ReaderInfo(readerInfoPointer, maxReaders, new PthreadRobustMutex());
     readerInfo.initialize();
   }
 

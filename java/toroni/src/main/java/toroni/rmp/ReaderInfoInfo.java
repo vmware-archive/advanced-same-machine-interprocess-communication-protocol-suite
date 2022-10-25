@@ -18,6 +18,7 @@ public class ReaderInfoInfo {
   public final long IS_ACTIVE_OFFSET;
 
   public final long INFO_ADDRESS;
+  public final long LOCK_ADDRESS;
   public final long POSITION_ADDRESS;
   public final long IS_ACTIVE_ADDRESS;
 
@@ -38,23 +39,25 @@ public class ReaderInfoInfo {
     }
   }
 
-  public ReaderInfoInfo(Pointer infoPointer, RobustMutex _lock) {
+  public ReaderInfoInfo(Pointer infoPointer, RobustMutex protoLock) {
     _infoPointer = infoPointer;
-    lock = _lock;
+
+    lock = protoLock.create();
 
     LOCK_OFFSET = 0;
     POSITION_OFFSET = LOCK_OFFSET + lock.size();
     IS_ACTIVE_OFFSET = POSITION_OFFSET + Long.BYTES;
 
     INFO_ADDRESS = Pointer.nativeValue(_infoPointer);
+    LOCK_ADDRESS = INFO_ADDRESS + LOCK_OFFSET;
     POSITION_ADDRESS = INFO_ADDRESS + POSITION_OFFSET;
     IS_ACTIVE_ADDRESS = INFO_ADDRESS + IS_ACTIVE_OFFSET;
   }
 
   void initialize() {
+    lock.initialize(new Pointer(LOCK_ADDRESS));
     setIsActive((byte) 0);
     setPosition(0);
-    lock.initialize();
   }
 
   /**

@@ -2,7 +2,7 @@
  * Copyright 2022 VMware, Inc.
  * SPDX-License-Identifier: Apache-2.0
  */
- 
+
 package toroni.traits;
 
 import org.junit.jupiter.api.RepeatedTest;
@@ -18,14 +18,13 @@ import com.sun.jna.Memory;
 import com.sun.jna.Pointer;
 
 class PthreadRobustMutexTest {
-  private final int MUTEX_SIZE_BYTES = 40;
   private final int TIMEOUT_MS = 100;
 
   @Test
   void tryLockUnlocked() {
-    Pointer mtxPointer = new Memory(MUTEX_SIZE_BYTES);
-    PthreadRobustMutex mtx = new PthreadRobustMutex(mtxPointer);
-    mtx.initialize();
+    Pointer mtxPointer = new Memory(PthreadRobustMutex.getSize());
+    PthreadRobustMutex mtx = new PthreadRobustMutex();
+    mtx.initialize(mtxPointer);
 
     Thread t = new Thread(new Runnable() {
       @Override
@@ -47,9 +46,9 @@ class PthreadRobustMutexTest {
   @Test
   @RepeatedTest(100)
   void tryLockDead() {
-    Pointer mtxPointer = new Memory(MUTEX_SIZE_BYTES);
-    PthreadRobustMutex mtx = new PthreadRobustMutex(mtxPointer);
-    mtx.initialize();
+    Pointer mtxPointer = new Memory(PthreadRobustMutex.getSize());
+    PthreadRobustMutex mtx = new PthreadRobustMutex();
+    mtx.initialize(mtxPointer);
 
     Thread t = new Thread(new Runnable() {
       @Override
@@ -79,9 +78,9 @@ class PthreadRobustMutexTest {
   @Test
   @RepeatedTest(100)
   void lockLocked() {
-    Pointer mtxPointer = new Memory(MUTEX_SIZE_BYTES);
-    PthreadRobustMutex mtx = new PthreadRobustMutex(mtxPointer);
-    mtx.initialize();
+    Pointer mtxPointer = new Memory(PthreadRobustMutex.getSize());
+    PthreadRobustMutex mtx = new PthreadRobustMutex();
+    mtx.initialize(mtxPointer);
 
     AtomicBoolean locked1 = new AtomicBoolean(false);
     AtomicBoolean finished1 = new AtomicBoolean(false);
@@ -132,9 +131,9 @@ class PthreadRobustMutexTest {
 
   @Test
   void size() {
-    Pointer mtxPointer = new Memory(MUTEX_SIZE_BYTES);
-    PthreadRobustMutex mtx = new PthreadRobustMutex(mtxPointer);
-    mtx.initialize();
+    Pointer mtxPointer = new Memory(PthreadRobustMutex.getSize());
+    PthreadRobustMutex mtx = new PthreadRobustMutex();
+    mtx.initialize(mtxPointer);
 
     assertEquals(40, mtx.size());
   }

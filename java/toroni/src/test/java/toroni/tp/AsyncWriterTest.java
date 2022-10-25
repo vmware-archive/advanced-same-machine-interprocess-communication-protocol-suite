@@ -27,9 +27,6 @@ import toroni.traits.PthreadRobustMutex;
 import toroni.traits.RobustMutex;
 
 class AsyncWriterTest {
-
-  private final int MUTEX_SIZE_BYTES = 40;
-
   private AsyncWriter.EnqueueMsgFn mockEnqueueMsgFn = Mockito.mock(AsyncWriter.EnqueueMsgFn.class);
   private AsyncWriter.DrainMsgFn mockDrainMsgFn = Mockito.mock(AsyncWriter.DrainMsgFn.class);
   private AsyncWriter.EnqueueWorkFn mockEnqueueWorkFn = Mockito.mock(AsyncWriter.EnqueueWorkFn.class);
@@ -39,9 +36,9 @@ class AsyncWriterTest {
   ByteRingBuffer initRingBuf() {
     long bufSize = 1024;
 
-    Pointer mtxPointer = new Memory(MUTEX_SIZE_BYTES);
-    RobustMutex mtx = new PthreadRobustMutex(mtxPointer);
-    mtx.initialize();
+    Pointer mtxPointer = new Memory(PthreadRobustMutex.getSize());
+    RobustMutex mtx = new PthreadRobustMutex();
+    mtx.initialize(mtxPointer);
 
     Pointer ringBufPointer = new Memory(ByteRingBuffer.size(bufSize, PthreadRobustMutex.getSize()));
     ByteRingBuffer ringBuf = new ByteRingBuffer(ringBufPointer, bufSize, mtx);
@@ -53,21 +50,10 @@ class AsyncWriterTest {
   ReaderInfo initReaderInfo() {
     short maxReaders = 3;
 
-    Pointer[] mtxPointers = {
-        new Memory(MUTEX_SIZE_BYTES),
-        new Memory(MUTEX_SIZE_BYTES),
-        new Memory(MUTEX_SIZE_BYTES)
-    };
+    Pointer readerInfoPointer = new Memory(ReaderInfo.size(maxReaders, PthreadRobustMutex.getSize()));
 
-    RobustMutex[] locks = new PthreadRobustMutex[maxReaders];
-    for (int i = 0; i < maxReaders; i++) {
-      locks[i] = new PthreadRobustMutex(mtxPointers[i]);
-      locks[i].initialize();
-    }
-
-    Pointer readerInfoPointer = new Memory(ReaderInfo.size(maxReaders, MUTEX_SIZE_BYTES));
-
-    ReaderInfo readerInfo = new ReaderInfo(readerInfoPointer, maxReaders, locks);
+    ReaderInfo readerInfo = new ReaderInfo(readerInfoPointer, maxReaders,
+        new PthreadRobustMutex());
     readerInfo.initialize();
 
     return readerInfo;

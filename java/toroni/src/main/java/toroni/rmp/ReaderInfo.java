@@ -54,7 +54,7 @@ public class ReaderInfo {
     FIRST_INFO_OFFSET = READERS_MIN_MAX_OFFSET + Integer.BYTES;
   }
 
-  public ReaderInfo(Pointer readerInfoPointer, short maxReaders, RobustMutex[] locks) {
+  public ReaderInfo(Pointer readerInfoPointer, short maxReaders, RobustMutex protoLock) {
     _readerInfoPointer = readerInfoPointer;
     _maxReaders = maxReaders;
     _infos = new ReaderInfoInfo[maxReaders];
@@ -67,8 +67,8 @@ public class ReaderInfo {
     FIRST_INFO_ADDRESS = READER_INFO_ADDRESS + FIRST_INFO_OFFSET;
 
     for (int i = 0; i < maxReaders; i++) {
-      _infos[i] = new ReaderInfoInfo(new Pointer(FIRST_INFO_ADDRESS + i * ReaderInfoInfo.size(locks[i].size())),
-          locks[i]);
+      _infos[i] = new ReaderInfoInfo(new Pointer(FIRST_INFO_ADDRESS + i * ReaderInfoInfo.size(protoLock.size())),
+          protoLock);
     }
   }
 
