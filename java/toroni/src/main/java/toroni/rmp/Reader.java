@@ -79,7 +79,7 @@ public class Reader {
       assert (bufIndex + MessageHeader.size() + msgHeaderCpy.length <= _ringBuf.getBufSize());
 
       if (msgHeaderCpy.type == MessageHeader.MESSAGE) {
-        if (copyConfirmCb.copy(bufIndex + MessageHeader.size(), msgHeaderCpy.length)) {
+        if (copyConfirmCb.copy(bufIndex + MessageHeader.size(), (int) msgHeaderCpy.length)) {
           // Reliable pessimistic expiration check.
           if (Util.expired(pos, _ringBuf.getFreePos(), _ringBuf.getBufSize())) {
             return new ResultPosPair(Result.EXPIRED_POSITION, pos);

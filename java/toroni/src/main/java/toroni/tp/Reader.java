@@ -163,10 +163,10 @@ public class Reader {
         _ringBuf, new ReadCallback() {
 
           @Override
-          public void messageRecieved(byte[] data) {
+          public void messageRecieved(byte[] data, int length) {
             for (ChannelReader cr : channelReaders) {
               TopicMsgDeserializer.ResultMessagePair deserialized = TopicMsgDeserializer.deserializeAndFilter(
-                  data, cr._readerGen, cr._name, cr._handleDescendants);
+                  data, length, cr._readerGen, cr._name, cr._handleDescendants);
               if (deserialized.result) {
                 cr._handler.run(deserialized.message);
               }

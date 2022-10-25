@@ -6,5 +6,5 @@
 package toroni.rmp;
 
 public interface ReadCallback {
-  void messageRecieved(byte[] data);
+  void messageRecieved(byte[] data, int length);
 }

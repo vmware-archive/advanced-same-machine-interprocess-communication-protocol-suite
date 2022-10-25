@@ -12,18 +12,15 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.sun.jna.Memory;
+import com.sun.jna.Pointer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
-import com.sun.jna.Pointer;
-import com.sun.jna.Memory;
-
 import toroni.rmp.detail.MessageHeader;
 import toroni.traits.PthreadRobustMutex;
 import toroni.traits.RobustMutex;
@@ -52,9 +49,9 @@ class ReaderWriterTest {
     }
 
     @Override
-    public boolean copy(long index, long dataLength) {
-      ByteBuffer bb = ByteBuffer.allocate((int) dataLength);
-      _ringBuf.getBytes(index, dataLength, bb.array());
+    public boolean copy(long index, int length) {
+      ByteBuffer bb = ByteBuffer.allocate(length);
+      _ringBuf.getBytes(index, length, bb.array());
       bb.order(ByteOrder.LITTLE_ENDIAN);
       _tmpData = bb.getInt();
       return true;
@@ -64,7 +61,6 @@ class ReaderWriterTest {
     public void confirm() {
       data.add(_tmpData);
     }
-
   }
 
   void initRingBuf() {
@@ -83,11 +79,9 @@ class ReaderWriterTest {
   void initReaderInfo() {
     short maxReaders = 3;
 
-    Pointer[] mtxPointers = {
+    Pointer[] mtxPointers = { new Memory(MUTEX_SIZE_BYTES),
         new Memory(MUTEX_SIZE_BYTES),
-        new Memory(MUTEX_SIZE_BYTES),
-        new Memory(MUTEX_SIZE_BYTES)
-    };
+        new Memory(MUTEX_SIZE_BYTES) };
 
     RobustMutex[] locks = new PthreadRobustMutex[maxReaders];
     for (int i = 0; i < maxReaders; i++) {
@@ -114,12 +108,10 @@ class ReaderWriterTest {
     }
 
     noBPHandler = new BackPressureCallback() {
-
       @Override
       public boolean writeOrWait(long bpPos, long freePos) {
         return false;
       }
-
     };
 
     mockBPHandler = Mockito.mock(BackPressureCallback.class);
@@ -131,12 +123,8 @@ class ReaderWriterTest {
 
   void writeInt(int v) {
     // convert the int to byte array
-    byte[] data = {
-        (byte) ((v >> 0) & 0xff),
-        (byte) ((v >> 8) & 0xff),
-        (byte) ((v >> 16) & 0xff),
-        (byte) ((v >> 24) & 0xff)
-    };
+    byte[] data = { (byte) ((v >> 0) & 0xff), (byte) ((v >> 8) & 0xff),
+        (byte) ((v >> 16) & 0xff), (byte) ((v >> 24) & 0xff) };
 
     writer.writeEx(data, noBPHandler);
   }
@@ -164,11 +152,13 @@ class ReaderWriterTest {
     writeInt(2);
 
     assertEquals(Reader.Result.SUCCESS, readerBP.readEx(readHandler));
-    Assertions.assertArrayEquals(new int[] { 1, 2 }, readHandler.data.stream().mapToInt(i -> i).toArray());
+    Assertions.assertArrayEquals(
+        new int[] { 1, 2 }, readHandler.data.stream().mapToInt(i -> i).toArray());
 
     readHandler.data.clear();
     assertEquals(Reader.Result.SUCCESS, readerBP.readEx(readHandler));
-    Assertions.assertArrayEquals(new int[] {}, readHandler.data.stream().mapToInt(i -> i).toArray());
+    Assertions.assertArrayEquals(
+        new int[] {}, readHandler.data.stream().mapToInt(i -> i).toArray());
   }
 
   @Test
@@ -219,7 +209,8 @@ class ReaderWriterTest {
     writeInt(10);
 
     assertEquals(Reader.Result.SUCCESS, readerBP.readEx(readHandler));
-    Assertions.assertArrayEquals(new int[] { 10 }, readHandler.data.stream().mapToInt(i -> i).toArray());
+    Assertions.assertArrayEquals(
+        new int[] { 10 }, readHandler.data.stream().mapToInt(i -> i).toArray());
   }
 
   @Test
@@ -267,7 +258,7 @@ class ReaderWriterTest {
       public int confirmCount = 0;
 
       @Override
-      public boolean copy(long index, long dataLength) {
+      public boolean copy(long index, int dataLength) {
         copyCount += dataLength;
         return false;
       }
@@ -276,7 +267,6 @@ class ReaderWriterTest {
       public void confirm() {
         confirmCount += 1;
       }
-
     }
 
     readerBP.activate();
@@ -296,19 +286,15 @@ class ReaderWriterTest {
     writeInt(20);
 
     Thread t = new Thread(new Runnable() {
-
       @Override
       public void run() {
         writeBigData(new BackPressureCallback() {
-
           @Override
           public boolean writeOrWait(long bpPos, long freePos) {
             throw new Error();
           }
-
         });
       }
-
     });
 
     t.start();
@@ -320,14 +306,17 @@ class ReaderWriterTest {
 
     writeInt(30);
     assertEquals(Reader.Result.SUCCESS, readerBP.readEx(readHandler));
-    Assertions.assertArrayEquals(new int[] { 20, 30 }, readHandler.data.stream().mapToInt(i -> i).toArray());
+    Assertions.assertArrayEquals(
+        new int[] { 20, 30 },
+        readHandler.data.stream().mapToInt(i -> i).toArray());
   }
 
   @Test
   void readInactiveDeathTest() {
-    Assertions.assertThrows(AssertionError.class, () -> {
-      readerBP.readEx(readHandler);
-    });
+    Assertions.assertThrows(AssertionError.class,
+        () -> {
+          readerBP.readEx(readHandler);
+        });
   }
 
   @Test
@@ -338,5 +327,4 @@ class ReaderWriterTest {
       writer.writeEx(biggerMessage, noBPHandler);
     });
   }
-
 }

@@ -23,8 +23,9 @@ public class TopicMsgDeserializer {
   /**
    * Deserializes a topic message if its topic matches. If it matches in the end
    * data contains only the message without the topic.
-   * 
+   *
    * @param data
+   * @param length number of bytes available in data
    * @param readerGen
    * @param channelName
    * @param handleDescendants
@@ -32,9 +33,11 @@ public class TopicMsgDeserializer {
    *         and message=the remaining message without the topic information,
    *         otherwise a ResultMessagePiar wiht result=false and message=null
    */
-  public static ResultMessagePair deserializeAndFilter(byte[] data, long readerGen, String channelName,
-      boolean handleDescendants) {
-    assert (data.length >= TopicMsgSerializer.sizeOf("", 0));
+  public static ResultMessagePair
+  deserializeAndFilter(byte[] data, int length, long readerGen,
+                       String channelName, boolean handleDescendants) {
+    assert (length <= data.length);
+    assert (length >= TopicMsgSerializer.sizeOf("", 0));
 
     long writerReaderGen = Util.readLongValue(data, 0);
     if (writerReaderGen < readerGen) {
@@ -53,8 +56,10 @@ public class TopicMsgDeserializer {
       }
     }
 
-    final ByteBuffer bb = ByteBuffer.wrap(data, msgInd, data.length - msgInd).slice();
-    if (topicMatches(channelName, handleDescendants, writerChannelBB, writerPd)) {
+    final ByteBuffer bb =
+        ByteBuffer.wrap(data, msgInd, length - msgInd).slice();
+    if (topicMatches(channelName, handleDescendants, writerChannelBB,
+                     writerPd)) {
       return new ResultMessagePair(true, bb);
     }
 
@@ -63,26 +68,32 @@ public class TopicMsgDeserializer {
 
   /**
    * Match writer+postToDescendents and reader+handleDescendents topics.
-   * 
+   *
    * @param readerChannel
    * @param handleDescendants
    * @param writerChannel
    * @param postToDescendants
    * @return true if they match, false otherwise
    */
-  public static boolean topicMatches(String readerChannel, boolean handleDescendants, String writerChannel,
-      boolean postToDescendants) {
+  public static boolean topicMatches(String readerChannel,
+                                     boolean handleDescendants,
+                                     String writerChannel,
+                                     boolean postToDescendants) {
 
     ByteBuffer writerChannelBB = ByteBuffer.wrap(writerChannel.getBytes());
-    return topicMatches(readerChannel, handleDescendants, writerChannelBB, postToDescendants);
+    return topicMatches(readerChannel, handleDescendants, writerChannelBB,
+                        postToDescendants);
   }
 
-  public static boolean topicMatches(String readerChannel, boolean handleDescendants, ByteBuffer writerChannel,
-      boolean postToDescendants) {
+  public static boolean topicMatches(String readerChannel,
+                                     boolean handleDescendants,
+                                     ByteBuffer writerChannel,
+                                     boolean postToDescendants) {
     int mlen = Math.min(readerChannel.length(), writerChannel.limit());
     int clen = 0;
 
-    while (clen < mlen && readerChannel.charAt(clen) == (char) writerChannel.get(clen)) {
+    while (clen < mlen &&
+           readerChannel.charAt(clen) == (char)writerChannel.get(clen)) {
       clen++;
     }
 
