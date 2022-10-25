@@ -15,12 +15,14 @@ export TORONI_AGENT_ITERATIONS=1
 export TORONI_AGENT_TEST_FLAVOR=FIRST_LAST_DURATION
 export TORONI_AGENT_MESSAGES_PER_WRITER=1000
 
+# cpp initialization, java reader, cpp writer
 export TORONI_AGENT_DEFAULT="/cpp-burst/agent"
 export TORONI_AGENT_READER="java -cp $CLASS_PATH toroni.system_tests.Agent"
 export TORONI_AGENT_WRITER=$TORONI_AGENT_DEFAULT
 (cd $SYSTEM_TESTS_ROOT/burst && ./bench-cell.sh 1 1 stat)
 
-#export TORONI_AGENT_DEFAULT="java -cp $CLASS_PATH toroni.system_tests.Agent"
-#export TORONI_AGENT_READER="/cpp-burst/agent"
-#export TORONI_AGENT_WRITER=$TORONI_AGENT_DEFAULT
-#(cd $SYSTEM_TESTS_ROOT/burst && ./bench-cell.sh 1 1 stat)
+# cpp initialization, cpp reader, java writer
+export TORONI_AGENT_DEFAULT="/cpp-burst/agent"
+export TORONI_AGENT_READER=$TORONI_AGENT_DEFAULT
+export TORONI_AGENT_WRITER="java -cp $CLASS_PATH toroni.system_tests.Agent"
+(cd $SYSTEM_TESTS_ROOT/burst && ./bench-cell.sh 2 2 stat)
