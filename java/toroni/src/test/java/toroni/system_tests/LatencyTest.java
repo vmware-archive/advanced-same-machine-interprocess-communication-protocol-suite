@@ -3,10 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-
 package toroni.system_tests;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import toroni.tp.AsyncWriter;
 
@@ -22,8 +22,12 @@ public class LatencyTest extends BaseTest {
     long now = System.nanoTime();
 
     try {
+      ByteBuffer dataBB = ByteBuffer.allocate(Long.BYTES);
+      dataBB.order(ByteOrder.LITTLE_ENDIAN);
+      dataBB.putLong(now);
+
       byte[] topicMsg = _writer.createMessage("channel",
-          Long.toString(now), false);
+          dataBB.array(), false);
 
       _writer.post(topicMsg);
       _postedCount++;
@@ -32,9 +36,10 @@ public class LatencyTest extends BaseTest {
     }
   }
 
-  public void onChannelReader(ByteBuffer data) {
+  public void onChannelReader(ByteBuffer dataBB) {
     _recievedCount++;
-    _latencySumNs += System.nanoTime() - Long.parseLong(new String(data.array()));
+    dataBB.order(ByteOrder.LITTLE_ENDIAN);
+    _latencySumNs += System.nanoTime() - dataBB.getLong();
     Agent.LOGGER.info("PROCESS_ID [ " + ProcessHandle.current().pid() + " ] " + "latency rcv" + _recievedCount);
   }
 

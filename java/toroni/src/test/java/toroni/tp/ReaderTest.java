@@ -2,7 +2,7 @@
  * Copyright 2022 VMware, Inc.
  * SPDX-License-Identifier: Apache-2.0
  */
- 
+
 package toroni.tp;
 
 import com.sun.jna.Pointer;
@@ -137,7 +137,7 @@ class ReaderTest {
 
     byte[] msg;
     try {
-      msg = writer.createMessage(topic, data, postToDescendants);
+      msg = writer.createMessage(topic, data.getBytes(), postToDescendants);
     } catch (Exception e) {
       throw new Error(e);
     }

@@ -20,7 +20,7 @@ public class ThroughputTest extends BaseTest {
     msg = msg.repeat((int) Config.getOptMessagesSizeBytes());
 
     try {
-      _topicMsg = _writer.createMessage("channel", msg, false);
+      _topicMsg = _writer.createMessage("channel", msg.getBytes(), false);
     } catch (Exception e) {
       throw new Error(e);
     }

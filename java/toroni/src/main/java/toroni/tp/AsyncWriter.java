@@ -84,11 +84,11 @@ public class AsyncWriter {
    * @return a topic message in the form of ArrayList<Byte>
    * @throws Exception if message data is too big
    */
-  public byte[] createMessage(String channelName, String msg,
+  public byte[] createMessage(String channelName, byte[] msg,
       boolean postToDescendants) throws Exception {
-    assert (msg.length() != 0);
+    assert (msg.length != 0);
 
-    int topicMsgLen = TopicMsgSerializer.sizeOf(channelName, msg.length());
+    int topicMsgLen = TopicMsgSerializer.sizeOf(channelName, msg.length);
 
     if (topicMsgLen > _rbWriter.getMaxMessageSize()) {
       throw new Exception("Message size exceeds RingBuffer size");

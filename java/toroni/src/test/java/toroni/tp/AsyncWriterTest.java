@@ -83,7 +83,7 @@ class AsyncWriterTest {
 
     byte[] msg = new byte[0];
     try {
-      msg = writer.createMessage("1", "1", true);
+      msg = writer.createMessage("1", "1".getBytes(), true);
     } catch (Exception e) {
       assert (false);
     }
@@ -125,7 +125,7 @@ class AsyncWriterTest {
 
     byte[] msg = new byte[0];
     try {
-      msg = writer.createMessage("1", "1", true);
+      msg = writer.createMessage("1", "1".getBytes(), true);
     } catch (Exception e) {
       assert (false);
     }

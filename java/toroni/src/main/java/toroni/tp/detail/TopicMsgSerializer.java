@@ -39,30 +39,25 @@ public class TopicMsgSerializer {
    * @param msg
    */
   public static void serialize(byte[] rbMsg, long readerGen, boolean postToDescedants,
-      String channelName, String msg) {
+      String channelName, byte[] msg) {
 
     int rbMsgInd = 0;
 
     // write readerGen
     byte[] readerGenByteArray = Util.longToByteArray(readerGen);
-    for (int i = 0; i < 8; i++) {
-      rbMsg[rbMsgInd++] = readerGenByteArray[i];
-    }
+    System.arraycopy(readerGenByteArray, 0, rbMsg, rbMsgInd, 8);
+    rbMsgInd += 8;
 
     // add postToDescendants
     rbMsg[rbMsgInd++] = (postToDescedants ? (byte) 1 : (byte) 0);
 
     // add channleName
     byte[] channelNameByteArray = channelName.getBytes();
-    for (int i = 0; i < channelName.length(); i++) {
-      rbMsg[rbMsgInd++] = channelNameByteArray[i];
-    }
+    System.arraycopy(channelNameByteArray, 0, rbMsg, rbMsgInd, channelNameByteArray.length);
+    rbMsgInd += channelNameByteArray.length;
     rbMsg[rbMsgInd++] = (byte) 0;
 
     // add msg
-    byte[] msgByteArray = msg.getBytes();
-    for (int i = 0; i < msg.length(); i++) {
-      rbMsg[rbMsgInd++] = msgByteArray[i];
-    }
+    System.arraycopy(msg, 0, rbMsg, rbMsgInd, msg.length);
   }
 }
