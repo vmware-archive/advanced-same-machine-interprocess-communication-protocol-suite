@@ -26,3 +26,9 @@ export TORONI_AGENT_DEFAULT="/cpp-burst/agent"
 export TORONI_AGENT_READER=$TORONI_AGENT_DEFAULT
 export TORONI_AGENT_WRITER="java -cp $CLASS_PATH toroni.system_tests.Agent"
 (cd $SYSTEM_TESTS_ROOT/burst && ./bench-cell.sh 2 2 stat)
+
+# java initialization, java reader, cpp writer
+export TORONI_AGENT_DEFAULT="java -cp $CLASS_PATH toroni.system_tests.Agent"
+export TORONI_AGENT_READER=$TORONI_AGENT_DEFAULT
+export TORONI_AGENT_WRITER="/cpp-burst/agent"
+(cd $SYSTEM_TESTS_ROOT/burst && ./bench-cell.sh 2 2 stat)
