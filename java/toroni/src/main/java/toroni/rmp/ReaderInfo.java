@@ -77,13 +77,14 @@ public class ReaderInfo {
    */
   public void initialize() {
     _unsafe.putLong(STAT_EXPIRED_READERS_ADDRESS, 0);
-    _unsafe.putByte(INITIALIZED_ADDRESS, (byte) 1);
     _unsafe.putShort(MAX_READERS_ADDRESS, _maxReaders);
     _unsafe.putInt(READERS_MIN_MAX_ADDRESS, 0);
 
     for (int i = 0; i < _maxReaders; i++) {
       _infos[i].initialize();
     }
+
+    _unsafe.putByte(INITIALIZED_ADDRESS, (byte) 1);
   }
 
   /**
