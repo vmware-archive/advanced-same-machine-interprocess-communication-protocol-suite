@@ -42,16 +42,16 @@ public class ReaderInfoInfo {
   public ReaderInfoInfo(Pointer infoPointer, RobustMutex protoLock) {
     _infoPointer = infoPointer;
 
-    lock = protoLock.create();
-
     LOCK_OFFSET = 0;
-    POSITION_OFFSET = LOCK_OFFSET + lock.size();
+    POSITION_OFFSET = LOCK_OFFSET + protoLock.size();
     IS_ACTIVE_OFFSET = POSITION_OFFSET + Long.BYTES;
 
     INFO_ADDRESS = Pointer.nativeValue(_infoPointer);
     LOCK_ADDRESS = INFO_ADDRESS + LOCK_OFFSET;
     POSITION_ADDRESS = INFO_ADDRESS + POSITION_OFFSET;
     IS_ACTIVE_ADDRESS = INFO_ADDRESS + IS_ACTIVE_OFFSET;
+
+    lock = protoLock.load(new Pointer(LOCK_ADDRESS));
   }
 
   void initialize() {
@@ -80,7 +80,7 @@ public class ReaderInfoInfo {
 
   /**
    * Update the value of {@code position} to {@code value}.
-   * 
+   *
    * @param value
    */
   public void setPosition(long value) {
@@ -96,11 +96,10 @@ public class ReaderInfoInfo {
 
   /**
    * Update the value of {@code isActive} to {@code value}.
-   * 
+   *
    * @param value
    */
   public void setIsActive(byte value) {
     _unsafe.putByteVolatile(null, IS_ACTIVE_ADDRESS, value);
   }
-
 }

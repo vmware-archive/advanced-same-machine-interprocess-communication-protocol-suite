@@ -10,21 +10,20 @@ import com.sun.jna.Pointer;
 public interface RobustMutex {
 
   /**
-   * Factory method
-   * 
+   * Load a mutex from the memory pointed by {@code mtx}.
+   *
    * @return
    */
-  RobustMutex create();
+  RobustMutex load(Pointer mtx);
 
   /**
-   * Initializes a new robust mutex in the memory provided by the argument
-   * pointer.
+   * Initializes a new mutex in the memory pointed by {@code mtx}.
    */
   void initialize(Pointer mtx);
 
   /**
    * Returns the size of the mutex in memory.
-   * 
+   *
    * @return the size (in bytes) of the mutex
    */
   long size();
@@ -37,7 +36,7 @@ public interface RobustMutex {
 
   /**
    * Attempts to lock the mutex and returns immidiately.
-   * 
+   *
    * @return true on success; false on fail.
    */
   public boolean tryLock();
@@ -46,5 +45,4 @@ public interface RobustMutex {
    * Unlocks the mutex.
    */
   public void unlock();
-
 }

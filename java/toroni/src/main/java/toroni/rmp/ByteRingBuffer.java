@@ -53,14 +53,14 @@ public class ByteRingBuffer {
     }
   }
 
-  public ByteRingBuffer(Pointer ringBufPointer, long bufSizeBytes, RobustMutex writersMtx) {
+  public ByteRingBuffer(Pointer ringBufPointer, long bufSizeBytes,
+      RobustMutex protoLock) {
     _ringBufPointer = ringBufPointer;
     _bufSize = bufSizeBytes;
-    _mtx = writersMtx;
 
     BUF_SIZE_OFFSET = 0;
     MTX_OFFSET = BUF_SIZE_OFFSET + Long.BYTES;
-    FREE_POS_OFFSET = MTX_OFFSET + _mtx.size();
+    FREE_POS_OFFSET = MTX_OFFSET + protoLock.size();
     STAT_BACK_PRESSURE_COUNT_OFFSET = FREE_POS_OFFSET + Long.BYTES;
     STAT_NOTIFICATION_COUNT_OFFSET = STAT_BACK_PRESSURE_COUNT_OFFSET + Long.BYTES;
     INITIALIZED_OFFSET = STAT_NOTIFICATION_COUNT_OFFSET + Long.BYTES;
@@ -75,6 +75,8 @@ public class ByteRingBuffer {
     STAT_NOTIFICATION_COUNT_ADDRESS = RING_BUF_ADDRESS + STAT_NOTIFICATION_COUNT_OFFSET;
     INITIALIZED_ADDRESS = RING_BUF_ADDRESS + INITIALIZED_OFFSET;
     BUFFER_ADDRESS = RING_BUF_ADDRESS + BUFFER_OFFSET;
+
+    _mtx = protoLock.load(new Pointer(MTX_ADDRESS));
   }
 
   /**
@@ -128,7 +130,7 @@ public class ByteRingBuffer {
 
   /**
    * Updates the value of {@code freePos} to {@code newValue}.
-   * 
+   *
    * @param newValue
    */
   public void setFreePos(long newValue) {
@@ -151,7 +153,7 @@ public class ByteRingBuffer {
 
   /**
    * Updates the value of {@code statBackPressureCount} to {@code newValue}.
-   * 
+   *
    * @param newValue
    */
   public void setStatBackPressureCount(long newValue) {
@@ -174,7 +176,7 @@ public class ByteRingBuffer {
 
   /**
    * Updates the value of {@code statNotificationCount} to {@code newValue}.
-   * 
+   *
    * @param newValue
    */
   public void setStatNotificationCount(long newValue) {
@@ -205,7 +207,7 @@ public class ByteRingBuffer {
 
   /**
    * Writes the byte {@code value} at position {@code index} in the buffer.
-   * 
+   *
    * @param index
    * @param value
    */
@@ -227,13 +229,14 @@ public class ByteRingBuffer {
   /**
    * Reads (@code length) bytes from the ring buffer starting at {@code index}
    * into {@code data}.
-   * 
+   *
    * @param index
    * @param length
    * @param data
    */
   public void getBytes(long index, long length, byte[] data) {
-    _unsafe.copyMemory(null, BUFFER_ADDRESS + index, data, byteArrayOffset, length);
+    _unsafe.copyMemory(null, BUFFER_ADDRESS + index, data, byteArrayOffset,
+        length);
   }
 
   /**
@@ -246,7 +249,7 @@ public class ByteRingBuffer {
 
   /**
    * Writes the int {@code value} at position {@code index} in the buffer.
-   * 
+   *
    * @param index
    * @param value
    */
@@ -255,7 +258,7 @@ public class ByteRingBuffer {
   }
 
   /**
-   * 
+   *
    * @param index
    * @return the long at position {@code index} in the buffer.
    */
@@ -265,7 +268,7 @@ public class ByteRingBuffer {
 
   /**
    * Writes the long {@code value} at position {@code index} in the buffer.
-   * 
+   *
    * @param index
    * @param value
    */

@@ -23,8 +23,10 @@ public class PthreadRobustMutex implements RobustMutex {
   private Pointer _mtx;
 
   @Override
-  public RobustMutex create() {
-    return new PthreadRobustMutex();
+  public RobustMutex load(Pointer mtx) {
+    PthreadRobustMutex result = new PthreadRobustMutex();
+    result._mtx = mtx;
+    return result;
   }
 
   /**
@@ -47,7 +49,7 @@ public class PthreadRobustMutex implements RobustMutex {
 
   /**
    * Returns the size of the mutex in memory.
-   * 
+   *
    * @return the size (in bytes) of the mutex
    */
   @Override
@@ -77,7 +79,7 @@ public class PthreadRobustMutex implements RobustMutex {
 
   /**
    * Attempts to lock the mutex and returns immidiately.
-   * 
+   *
    * @return true on success; false on fail
    */
   @Override
@@ -106,7 +108,7 @@ public class PthreadRobustMutex implements RobustMutex {
 
   /**
    * Marks the mutex as consistent if the last owner died before unlocking.
-   * 
+   *
    * @param lockResults: result of the last operation on the mutex.
    * @return true if last owner has died; false otherwise.
    */
@@ -147,5 +149,4 @@ public class PthreadRobustMutex implements RobustMutex {
 
     int pthread_mutex_consistent(Pointer mutex);
   }
-
 }
