@@ -8,7 +8,7 @@ CLASS_PATH="/toroni/java/toroni/target/toroni-1.0.jar:/toroni/java/toroni/target
 SYSTEM_TESTS_ROOT=/toroni/cpp/system_tests
 
 export TORONI_AGENT_RINGBUF_SIZE_KB=64
-export TORONI_AGENT_MESSAGE_SIZE_BYTES=500
+export TORONI_AGENT_MESSAGE_SIZE_BYTES=5
 export TORONI_AGENT_BACKPRESSURE_SLEEP_MS=15
 export TORONI_AGENT_EXTRESULT=1
 export TORONI_AGENT_ITERATIONS=1
