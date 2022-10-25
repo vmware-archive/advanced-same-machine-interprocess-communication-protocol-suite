@@ -3,11 +3,11 @@
 # SPDX-License-Identifier: Apache-2.0
 set -e
 
-source setup-agent.sh
-
 # Test that
 # - a writer that crashes holding the RingBuffer lock
 # - another writer can write messages and reader receives them
+
+source setup-agent.sh
 
 export TORONI_AGENT_TEST_FLAVOR=ROBUST_WRITER # Causes writer to exit on bp and reaer block forever
 export TORONI_AGENT_RINGBUF_SIZE_KB=1

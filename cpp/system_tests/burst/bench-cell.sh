@@ -1,6 +1,7 @@
 #!/bin/bash
 # Copyright 2022 VMware, Inc.
 # SPDX-License-Identifier: Apache-2.0
+
 # Test with message bursts using many readers and writers over several iterations.
 
 set -e
@@ -14,7 +15,7 @@ export TORONI_AGENT_READERS_MAX=$READERS
 export TORONI_AGENT_READERS=$READERS
 export TORONI_AGENT_WRITERS=$WRITERS
 
-echo "Writers=$WRITERS Readers=$READERS Burst Size=$TORONI_AGENT_MESSAGES_PER_WRITER"
+echo "Writers=$WRITERS Readers=$READERS BufSizeKB=$TORONI_AGENT_RINGBUF_SIZE_KB BurstSize=$TORONI_AGENT_MESSAGES_PER_WRITER MessageSizeB=$TORONI_AGENT_MESSAGE_SIZE_BYTES BackpressureSleepMs=$TORONI_AGENT_BACKPRESSURE_SLEEP_MS FLAVOR=$TORONI_AGENT_TEST_FLAVOR Iterations=$TORONI_AGENT_ITERATIONS"
 
 # Init shared memory once for all iterations to get average results
 $TORONI_AGENT_DEFAULT init

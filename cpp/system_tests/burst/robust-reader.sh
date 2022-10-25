@@ -1,13 +1,14 @@
 #!/bin/bash
 # Copyright 2022 VMware, Inc.
 # SPDX-License-Identifier: Apache-2.0
-set -e
-
-source setup-agent.sh
 
 # Test that
 # - a reader crashes holding the only ReaderInfo lock
 # - another reader can acquire it and receive messages
+
+set -e
+
+source setup-agent.sh
 
 export TORONI_AGENT_TEST_FLAVOR=ROBUST_READER # Causes reader to exit on reading
 export TORONI_AGENT_MESSAGES_PER_WRITER=2
