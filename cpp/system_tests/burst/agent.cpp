@@ -397,6 +397,62 @@ int RunCmpReceivedMessages(size_t arg2) {
   return AgentStatsPtr()->msgCount == arg2 ? 0 : 1;
 }
 
+class OffsetPrinter
+{
+public:
+   OffsetPrinter(const string& name, const void* basePtr) : _basePtr(static_cast<const char*>(basePtr)) {
+      printf("%s\n", name.c_str());
+   }
+
+   void Offset(const string& field, const void* ptr)
+   {
+      printf("%s %d\n", field.c_str(), static_cast<const char*>(ptr) - _basePtr);
+   }
+
+private:
+   const char* _basePtr;
+};
+
+void RunLayout()
+{
+   {
+      OffsetPrinter op("RingBuf", RingBufPtr());
+      op.Offset("configBufSizeBytes", &(RingBufPtr()->configBufSizeBytes));
+      op.Offset("writerMtx", &(RingBufPtr()->writerMtx));
+      op.Offset("freePos", &(RingBufPtr()->freePos));
+      op.Offset("backPressureCount", &(RingBufPtr()->stats.backPressureCount));
+      op.Offset("notificationCount", &(RingBufPtr()->stats.notificationCount));
+      op.Offset("initialized", &(RingBufPtr()->initialized));
+      op.Offset("index0", &(RingBufPtr()->operator[](0)));
+   }
+
+   {
+      OffsetPrinter op("ReaderInfo", ReaderInfoPtr());
+      op.Offset("readerGen", &(ReaderInfoPtr()->readerGen));
+      op.Offset("initialized", &(ReaderInfoPtr()->initialized));
+      op.Offset("expiredReaders", &(ReaderInfoPtr()->rmpReaderInfo.stats.expiredReaders));
+      op.Offset("configMaxReaders", &(ReaderInfoPtr()->rmpReaderInfo.configMaxReaders));
+      op.Offset("readersMinMax", &(ReaderInfoPtr()->rmpReaderInfo.readersMinMax()));
+      for (int i=0; i<2; i++) {
+         op.Offset("lock", &(ReaderInfoPtr()->rmpReaderInfo.Get(i).lock));
+         op.Offset("position", &(ReaderInfoPtr()->rmpReaderInfo.Get(i).position));
+         op.Offset("isActive", &(ReaderInfoPtr()->rmpReaderInfo.Get(i).isActive));
+      }
+   }
+
+   {
+      OffsetPrinter op("Stats", AgentStatsPtr());
+      op.Offset("latencyNsSum", &(AgentStatsPtr()->latencyNsSum));
+      op.Offset("firstLastDurationNsSum", &(AgentStatsPtr()->firstLastDurationNsSum));
+      op.Offset("writerDurationNsSum", &(AgentStatsPtr()->writerDurationNsSum));
+      op.Offset("notificationNsSum", &(AgentStatsPtr()->notificationNsSum));
+      op.Offset("msgCount", &(AgentStatsPtr()->msgCount));
+      op.Offset("readersReady", &(AgentStatsPtr()->readersReady));
+      op.Offset("writersReady", &(AgentStatsPtr()->writersReady));
+      op.Offset("readerRuns", &(AgentStatsPtr()->readerRuns));
+   }
+}
+
 template <typename TestPolicy>
 int Main(int argc, char *argv[], TestPolicy &testPolicy) {
   if (argc == 1) {
@@ -424,6 +480,8 @@ int Main(int argc, char *argv[], TestPolicy &testPolicy) {
     return RunCmpReceivedMessages(stoi(argv[2]));
   } else if (string("resetiter") == argv[1]) {
     RunResetIter();
+  } else if (string("layout") == argv[1]) {
+    RunLayout();
   } else {
     printf("unknown cmd");
     return EC_UNKNOWN_ARG;

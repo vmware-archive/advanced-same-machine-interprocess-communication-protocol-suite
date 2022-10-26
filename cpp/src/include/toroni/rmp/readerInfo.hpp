@@ -36,6 +36,8 @@ public:
     StatCounter expiredReaders{0};
   } stats;
   bool initialized{false};
+  const uint16_t configMaxReaders;
+  const std::atomic<uint32_t>& readersMinMax() const { return _readersMinMax; };
 
   using ReaderId = int;
   static inline const ReaderId INVALID_READER_ID{-1};
@@ -51,7 +53,6 @@ public:
   Info &Get(ReaderId readerId);
 
 private:
-  uint16_t _configMaxReaders;
   std::atomic<uint32_t> _readersMinMax; // Range of active readers. [Min,Max)
 
   Info *InfoPtr() {
@@ -81,10 +82,10 @@ inline uint32_t ReaderInfo::Size(uint16_t configMaxReaders) {
  * @param  configMaxReaders:
  */
 inline ReaderInfo::ReaderInfo(uint16_t configMaxReaders)
-    : _configMaxReaders(configMaxReaders), _readersMinMax(0) {
+    : configMaxReaders(configMaxReaders), _readersMinMax(0) {
 
   // placement-new initialization of Info
-  new (InfoPtr()) Info[_configMaxReaders];
+  new (InfoPtr()) Info[configMaxReaders];
   initialized = true;
 }
 
@@ -96,7 +97,7 @@ inline ReaderInfo::ReaderInfo(uint16_t configMaxReaders)
 inline ReaderInfo::ReaderId ReaderInfo::Alloc() {
   Info *readersInfo = InfoPtr();
 
-  for (int i = 0; i < _configMaxReaders; i++) {
+  for (int i = 0; i < configMaxReaders; i++) {
     Info &readerInfo = readersInfo[i];
 
     if (readerInfo.lock.TryLock()) {
@@ -183,7 +184,7 @@ inline void ReaderInfo::GetActiveRange(uint16_t &min, uint16_t &max) const {
  */
 inline const ReaderInfo::Info &
 ReaderInfo::Get(ReaderInfo::ReaderId readerId) const {
-  assert(readerId >= 0 && readerId < _configMaxReaders);
+  assert(readerId >= 0 && readerId < configMaxReaders);
 
   const Info *readerInfo = InfoPtr();
 
@@ -191,7 +192,7 @@ ReaderInfo::Get(ReaderInfo::ReaderId readerId) const {
 }
 
 inline ReaderInfo::Info &ReaderInfo::Get(ReaderInfo::ReaderId readerId) {
-  assert(readerId >= 0 && readerId < _configMaxReaders);
+  assert(readerId >= 0 && readerId < configMaxReaders);
 
   Info *readerInfo = InfoPtr();
 
@@ -211,9 +212,9 @@ inline void ReaderInfo::UpdateActiveRange() {
   do {
     old = _readersMinMax;
 
-    uint16_t min = _configMaxReaders, max = 0;
+    uint16_t min = configMaxReaders, max = 0;
 
-    for (int i = 0; i < _configMaxReaders; i++) {
+    for (int i = 0; i < configMaxReaders; i++) {
       if (readerInfo[i].isActive) {
         if (i < min) {
           min = i;
