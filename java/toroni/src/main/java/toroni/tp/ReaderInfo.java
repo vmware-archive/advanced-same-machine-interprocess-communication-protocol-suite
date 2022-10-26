@@ -56,7 +56,7 @@ public class ReaderInfo {
     INITIALIZED_ADDRESS = READER_INFO_ADDRESS + INITIALIZED_OFFSET;
     RMP_READER_INFO_ADDRESS = READER_INFO_ADDRESS + RMP_READER_INFO_OFFSET;
 
-    rmpReaderInfo = new toroni.rmp.ReaderInfo(_readerInfoPointer, _maxReaders, protoLock);
+    rmpReaderInfo = new toroni.rmp.ReaderInfo(new Pointer(RMP_READER_INFO_ADDRESS), _maxReaders, protoLock);
   }
 
   /**
