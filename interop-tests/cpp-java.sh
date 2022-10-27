@@ -6,7 +6,7 @@ source setup-multicast.sh
 
 set -e
 
-CLASS_PATH="/toroni/java/toroni/target/toroni-1.0.jar:/toroni/java/toroni/target/test-classes:$HOME/.m2/repository/net/java/dev/jna/jna-platform/5.12.1/jna-platform-5.12.1.jar:$HOME/.m2/repository/net/java/dev/jna/jna/5.12.1/jna-5.12.1.jar"
+CLASS_PATH="/toroni/java/toroni/target/toroni-1.0.jar:/toroni/java/system_tests/target/classes:$HOME/.m2/repository/net/java/dev/jna/jna-platform/5.12.1/jna-platform-5.12.1.jar:$HOME/.m2/repository/net/java/dev/jna/jna/5.12.1/jna-5.12.1.jar"
 SYSTEM_TESTS_ROOT=/toroni/cpp/system_tests
 
 export TORONI_AGENT_RINGBUF_SIZE_KB=64
