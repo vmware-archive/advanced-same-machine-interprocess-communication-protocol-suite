@@ -79,7 +79,7 @@ jobs:
       run: mvn test
 
     - name: System Test
-      run: (export TORONI_SRC_ROOT=${{github.workspace}} && cd $TORONI_SRC_ROOT/java/system_tests/src/main/java/com/vmware/toroni/system_tests && cmake -S . -B ./build && cmake --build ./build && cd build && ctest --timeout 180)
+      run: (export TORONI_SRC_ROOT=${{github.workspace}} && cd ${{github.workspace}}/java/system_tests/src/main/java/com/vmware/toroni/system_tests && cmake -S . -B ./build && cmake --build ./build && cd build && ctest --timeout 180)
 
     - name: Interop Test (cpp-java)
       run:  (cd ${{github.workspace}} && docker run --privileged $(docker build -q -f ./interop-tests/cpp-java.Dockerfile .))
