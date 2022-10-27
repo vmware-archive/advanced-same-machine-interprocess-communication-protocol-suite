@@ -22,7 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import toroni.rmp.detail.MessageHeader;
-import toroni.traits.PthreadRobustMutex;
+import toroni.traits.posix.PthreadRobustMutex;
 
 class ReaderWriterTest {
   private Writer writer;

@@ -3,7 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package toroni.traits;
+package toroni.traits.posix;
+
+import toroni.traits.RobustMutex;
 
 import com.sun.jna.Pointer;
 import com.sun.jna.Memory;

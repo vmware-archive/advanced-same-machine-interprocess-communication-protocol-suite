@@ -31,7 +31,7 @@ import toroni.rmp.Writer;
 import toroni.rmp.detail.MessageHeader;
 import toroni.tp.Reader.ChannelReaderEventCallback;
 import toroni.tp.Reader.ChannelReaderEventType;
-import toroni.traits.PthreadRobustMutex;
+import toroni.traits.posix.PthreadRobustMutex;
 import toroni.traits.RobustMutex;
 
 class ReaderTest {

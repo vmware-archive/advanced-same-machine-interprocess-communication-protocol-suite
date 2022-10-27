@@ -22,12 +22,12 @@ import toroni.rmp.BackPressureCallback;
 import toroni.rmp.ByteRingBuffer;
 import toroni.tp.AsyncWriter;
 import toroni.tp.ChannelReader;
-import toroni.tp.MpscMessageQueue;
 import toroni.tp.Reader.ChannelReaderEventType;
 import toroni.traits.MulticastUdpNotification;
-import toroni.traits.PosixSharedMemoryFactory;
-import toroni.traits.PthreadRobustMutex;
+import toroni.traits.posix.PosixSharedMemoryFactory;
+import toroni.traits.posix.PthreadRobustMutex;
 import toroni.traits.SharedMemory;
+import toroni.traits.concurrent.MpscMessageQueue;
 
 public class Agent {
 

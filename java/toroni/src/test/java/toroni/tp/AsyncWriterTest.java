@@ -23,7 +23,7 @@ import com.sun.jna.Memory;
 
 import toroni.rmp.BackPressureCallback;
 import toroni.rmp.ByteRingBuffer;
-import toroni.traits.PthreadRobustMutex;
+import toroni.traits.posix.PthreadRobustMutex;
 import toroni.traits.RobustMutex;
 
 class AsyncWriterTest {

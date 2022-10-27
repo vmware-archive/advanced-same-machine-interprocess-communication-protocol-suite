@@ -3,7 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package toroni.traits;
+package toroni.traits.posix;
+
+import toroni.traits.SharedMemory;
 
 import com.sun.jna.Library;
 import com.sun.jna.Native;
@@ -35,7 +37,7 @@ public class PosixSharedMemoryFactory {
    * @return a SharedMemory object for the corresponding shared memory.
    * @throws Exception
    */
-  public static SharedMemory createOrOpenReadOnly(String name, int length, int mode) throws Exception {
+  public static toroni.traits.SharedMemory createOrOpenReadOnly(String name, int length, int mode) throws Exception {
     return createOrOpen(name, length, mode, O_RDONLY, PROT_READ);
   }
 

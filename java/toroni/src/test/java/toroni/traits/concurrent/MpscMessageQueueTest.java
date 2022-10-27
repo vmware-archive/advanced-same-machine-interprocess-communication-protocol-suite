@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package toroni.tp;
+package toroni.traits.concurrent;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

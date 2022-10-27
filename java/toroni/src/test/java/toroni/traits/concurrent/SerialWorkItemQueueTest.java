@@ -2,8 +2,8 @@
  * Copyright 2022 VMware, Inc.
  * SPDX-License-Identifier: Apache-2.0
  */
- 
-package toroni.tp;
+
+package toroni.traits.concurrent;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -11,6 +11,8 @@ import java.util.ArrayList;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import toroni.traits.concurrent.SerialWorkItemQueue;
 
 class SerialWorkItemQueueTest {
 

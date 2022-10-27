@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import com.sun.jna.Pointer;
 import com.sun.jna.Memory;
 
-import toroni.traits.PthreadRobustMutex;
+import toroni.traits.posix.PthreadRobustMutex;
 
 class ReaderInfoTest {
   private short maxReaders;

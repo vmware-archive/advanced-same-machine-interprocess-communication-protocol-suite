@@ -2,13 +2,15 @@
  * Copyright 2022 VMware, Inc.
  * SPDX-License-Identifier: Apache-2.0
  */
- 
-package toroni.traits;
+
+package toroni.traits.posix;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import toroni.traits.SharedMemory;
 
 import static com.sun.jna.platform.linux.Fcntl.S_IRUSR;
 import static com.sun.jna.platform.linux.Fcntl.S_IWUSR;

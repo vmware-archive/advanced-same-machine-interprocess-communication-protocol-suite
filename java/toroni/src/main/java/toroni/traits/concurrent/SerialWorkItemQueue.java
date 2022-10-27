@@ -2,8 +2,8 @@
  * Copyright 2022 VMware, Inc.
  * SPDX-License-Identifier: Apache-2.0
  */
- 
-package toroni.tp;
+
+package toroni.traits.concurrent;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;

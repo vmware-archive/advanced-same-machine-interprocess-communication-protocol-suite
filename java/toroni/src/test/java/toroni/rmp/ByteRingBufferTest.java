@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import com.sun.jna.Memory;
 import com.sun.jna.Pointer;
 
-import toroni.traits.PthreadRobustMutex;
+import toroni.traits.posix.PthreadRobustMutex;
 import toroni.traits.RobustMutex;
 
 class ByteRingBufferTest {
