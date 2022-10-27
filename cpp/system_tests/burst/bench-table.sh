@@ -30,6 +30,8 @@ do
    do
         printf ", "
       ./bench-cell.sh $w $r result  > /dev/null
+
+      if [ -n "$TORONI_BENCH11" ]; then exit 0; fi
    done
    printf "\n"
 done

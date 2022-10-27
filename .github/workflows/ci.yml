@@ -31,7 +31,7 @@ jobs:
 
     - name: Upload Unit Test Coverage
       run: (cd ./build/src/ &&  bash <(curl -s https://codecov.io/bash) -t  ${{ secrets.CODECOV }} -v)
-      
+
   Build-Test-Cpp-Release:
     runs-on: ubuntu-latest
 
@@ -52,6 +52,9 @@ jobs:
     - name: System Test
       run: (cd ./build/system_tests && ctest --timeout 180)
 
+    - name: Perf Test 1 Reader 1 Writer
+      run: (cd ./build/system_tests/burst && export TORONI_BENCH11=1 && ./bench-table.sh)
+
   Build-Test-Java:
     runs-on: ubuntu-latest
 
@@ -65,7 +68,7 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
-  
+
     - name: Build
       run: mvn install -DskipTests
 
@@ -80,6 +83,9 @@ jobs:
 
     - name: System Test
       run: (export TORONI_SRC_ROOT=${{github.workspace}} && cd ${{github.workspace}}/java/system_tests/src/main/java/com/vmware/toroni/system_tests && cmake -S . -B ./build && cmake --build ./build && cd build && ctest --timeout 180)
+
+    - name: Perf Test 1 Reader 1 Writer
+      run: (cd ${{github.workspace}}/java/system_tests/src/main/java/com/vmware/toroni/system_tests && export TORONI_BENCH11=1 && ./bench-table.sh)
 
     - name: Interop Test (cpp-java)
       run:  (cd ${{github.workspace}} && docker run --privileged $(docker build -q -f ./interop-tests/cpp-java.Dockerfile .))
