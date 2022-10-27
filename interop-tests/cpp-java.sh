@@ -18,7 +18,7 @@ export TORONI_AGENT_TEST_FLAVOR=FIRST_LAST_DURATION
 export TORONI_AGENT_MESSAGES_PER_WRITER=1000
 
 # shared memory initialization compare
-java -cp $CLASS_PATH toroni.system_tests.Agent init
+java -cp $CLASS_PATH com.vmware.toroni.system_tests.Agent init
 cp -rf /dev/shm/toroni* .
 /cpp-burst/agent init
 diff /dev/shm/toroni-burst-rb toroni-burst-rb
@@ -26,25 +26,25 @@ diff /dev/shm/toroni-burst-ri toroni-burst-ri
 diff /dev/shm/toroni-burst-s  toroni-burst-s
 
 # java initialization, cpp reader, cpp writer
-export TORONI_AGENT_DEFAULT="java -cp $CLASS_PATH toroni.system_tests.Agent"
+export TORONI_AGENT_DEFAULT="java -cp $CLASS_PATH com.vmware.toroni.system_tests.Agent"
 export TORONI_AGENT_READER="/cpp-burst/agent"
 export TORONI_AGENT_WRITER=$TORONI_AGENT_READER
 (cd $SYSTEM_TESTS_ROOT/burst && ./bench-cell.sh 1 1 stat)
 
 # cpp initialization, java reader, cpp writer
 export TORONI_AGENT_DEFAULT="/cpp-burst/agent"
-export TORONI_AGENT_READER="java -cp $CLASS_PATH toroni.system_tests.Agent"
+export TORONI_AGENT_READER="java -cp $CLASS_PATH com.vmware.toroni.system_tests.Agent"
 export TORONI_AGENT_WRITER=$TORONI_AGENT_DEFAULT
 (cd $SYSTEM_TESTS_ROOT/burst && ./bench-cell.sh 1 1 stat)
 
 # cpp initialization, cpp reader, java writer
 export TORONI_AGENT_DEFAULT="/cpp-burst/agent"
 export TORONI_AGENT_READER=$TORONI_AGENT_DEFAULT
-export TORONI_AGENT_WRITER="java -cp $CLASS_PATH toroni.system_tests.Agent"
+export TORONI_AGENT_WRITER="java -cp $CLASS_PATH com.vmware.toroni.system_tests.Agent"
 (cd $SYSTEM_TESTS_ROOT/burst && ./bench-cell.sh 2 2 stat)
 
 # java initialization, java reader, cpp writer
-export TORONI_AGENT_DEFAULT="java -cp $CLASS_PATH toroni.system_tests.Agent"
+export TORONI_AGENT_DEFAULT="java -cp $CLASS_PATH com.vmware.toroni.system_tests.Agent"
 export TORONI_AGENT_READER=$TORONI_AGENT_DEFAULT
 export TORONI_AGENT_WRITER="/cpp-burst/agent"
 (cd $SYSTEM_TESTS_ROOT/burst && ./bench-cell.sh 2 2 stat)

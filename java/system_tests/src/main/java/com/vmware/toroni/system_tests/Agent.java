@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package toroni.system_tests;
+package com.vmware.toroni.system_tests;
 
 import static com.sun.jna.platform.linux.Fcntl.S_IRUSR;
 import static com.sun.jna.platform.linux.Fcntl.S_IWUSR;
@@ -18,16 +18,16 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import toroni.rmp.BackPressureCallback;
-import toroni.rmp.ByteRingBuffer;
-import toroni.tp.AsyncWriter;
-import toroni.tp.ChannelReader;
-import toroni.tp.Reader.ChannelReaderEventType;
-import toroni.traits.MulticastUdpNotification;
-import toroni.traits.posix.PosixSharedMemoryFactory;
-import toroni.traits.posix.PthreadRobustMutex;
-import toroni.traits.SharedMemory;
-import toroni.traits.concurrent.MpscMessageQueue;
+import com.vmware.toroni.rmp.BackPressureCallback;
+import com.vmware.toroni.rmp.ByteRingBuffer;
+import com.vmware.toroni.tp.AsyncWriter;
+import com.vmware.toroni.tp.ChannelReader;
+import com.vmware.toroni.tp.Reader.ChannelReaderEventType;
+import com.vmware.toroni.traits.MulticastUdpNotification;
+import com.vmware.toroni.traits.posix.PosixSharedMemoryFactory;
+import com.vmware.toroni.traits.posix.PthreadRobustMutex;
+import com.vmware.toroni.traits.SharedMemory;
+import com.vmware.toroni.traits.concurrent.MpscMessageQueue;
 
 public class Agent {
 
@@ -43,8 +43,8 @@ public class Agent {
   static final SharedMemory readerInfoShm;
   static final SharedMemory statsShm;
   static final ByteRingBuffer ringBuf;
-  static final toroni.tp.ReaderInfo readerInfo;
-  static final toroni.rmp.ReaderInfo rmpReaderInfo;
+  static final com.vmware.toroni.tp.ReaderInfo readerInfo;
+  static final com.vmware.toroni.rmp.ReaderInfo rmpReaderInfo;
   static final AgentStats agentStats;
   static final MulticastUdpNotification udpNotification;
 
@@ -57,7 +57,7 @@ public class Agent {
 
       readerInfoShm = PosixSharedMemoryFactory.createOrOpen(
           "toroni-burst-ri",
-          toroni.tp.ReaderInfo.size((short) Config.getOptMaxReaders(), PthreadRobustMutex.getSize()),
+          com.vmware.toroni.tp.ReaderInfo.size((short) Config.getOptMaxReaders(), PthreadRobustMutex.getSize()),
           S_IRUSR | S_IWUSR);
 
       statsShm = PosixSharedMemoryFactory.createOrOpen(
@@ -72,7 +72,7 @@ public class Agent {
 
       short maxReaders = (short) Config.getOptMaxReaders();
 
-      readerInfo = new toroni.tp.ReaderInfo(readerInfoShm.ptr(), maxReaders,
+      readerInfo = new com.vmware.toroni.tp.ReaderInfo(readerInfoShm.ptr(), maxReaders,
           new PthreadRobustMutex());
 
       rmpReaderInfo = readerInfo.rmpReaderInfo;
@@ -194,9 +194,9 @@ public class Agent {
 
     AtomicBoolean readerExpired = new AtomicBoolean(false);
 
-    toroni.tp.Reader reader = toroni.tp.Reader.create(
+    com.vmware.toroni.tp.Reader reader = com.vmware.toroni.tp.Reader.create(
         ringBuf, readerInfo,
-        new toroni.tp.Reader.EnqueueSerialFn() {
+        new com.vmware.toroni.tp.Reader.EnqueueSerialFn() {
 
           @Override
           public void run(Runnable fn) {
@@ -204,7 +204,7 @@ public class Agent {
           }
 
         },
-        new toroni.tp.Reader.EnqueueSerialFn() {
+        new com.vmware.toroni.tp.Reader.EnqueueSerialFn() {
 
           @Override
           public void run(Runnable fn) {
@@ -212,7 +212,7 @@ public class Agent {
           }
 
         },
-        new toroni.tp.Reader.ChannelReaderEventCallback() {
+        new com.vmware.toroni.tp.Reader.ChannelReaderEventCallback() {
 
           @Override
           public void run(ChannelReaderEventType et) {

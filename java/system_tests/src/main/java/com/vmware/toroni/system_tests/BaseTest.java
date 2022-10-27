@@ -3,10 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package toroni.system_tests;
+package com.vmware.toroni.system_tests;
 
-import toroni.rmp.ByteRingBuffer;
-import toroni.tp.AsyncWriter;
+import com.vmware.toroni.rmp.ByteRingBuffer;
+import com.vmware.toroni.tp.AsyncWriter;
 
 public abstract class BaseTest implements TestPolicy {
 
@@ -49,7 +49,7 @@ public abstract class BaseTest implements TestPolicy {
 
   protected static void printResultExt() {
     ByteRingBuffer rb = Agent.ringBuf;
-    toroni.tp.ReaderInfo ri = Agent.readerInfo;
+    com.vmware.toroni.tp.ReaderInfo ri = Agent.readerInfo;
     AgentStats as = Agent.agentStats;
 
     double wtMs = avgPerIter((double) as.getWriterDurationNsSum()

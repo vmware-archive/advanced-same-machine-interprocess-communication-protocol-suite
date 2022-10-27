@@ -3,12 +3,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package toroni.system_tests;
+package com.vmware.toroni.system_tests;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import toroni.tp.AsyncWriter;
+import com.vmware.toroni.tp.AsyncWriter;
 
 public class LatencyTest extends BaseTest {
 

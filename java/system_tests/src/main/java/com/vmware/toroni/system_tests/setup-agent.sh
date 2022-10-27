@@ -8,6 +8,6 @@ CLASS_PATH="$TORONI_SRC_ROOT/java/toroni/target/toroni-1.0.jar:$TORONI_SRC_ROOT/
 
 export SYSTEM_TESTS_ROOT=$TORONI_SRC_ROOT/cpp/system_tests
 
-export TORONI_AGENT_DEFAULT="java -cp $CLASS_PATH toroni.system_tests.Agent"
+export TORONI_AGENT_DEFAULT="java -cp $CLASS_PATH com.vmware.toroni.system_tests.Agent"
 export TORONI_AGENT_READER=$TORONI_AGENT_DEFAULT
 export TORONI_AGENT_WRITER=$TORONI_AGENT_DEFAULT

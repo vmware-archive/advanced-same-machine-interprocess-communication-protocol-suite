@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
  
-package toroni.system_tests;
+package com.vmware.toroni.system_tests;
 
 public class RobustWriterTest extends ThroughputTest {
 
