@@ -44,8 +44,11 @@ Toroni is easy to plug into the threading model your project. It  does not invol
 
 Toroni itself is also pluggable. UDP notification is opt-in and can be replaced with other notification mechanisms. Custom backpressure strategies can be used.
 
-## C++
-Toroni is available as [C++ header-only library](./cpp/README.md).
+## Langauge Support
+Toroni is available for
+- [C++](./cpp/README.md) (header-only library)
+- [Java](./java/README.md)
+
 ## Contributing
 The Advanced Same Machine Interprocess Communication Protocol Suite project team welcomes contributions from the community. Before you start working with this project please read and sign our Contributor License Agreement (https://cla.vmware.com/cla/1/preview). If you wish to contribute code and you have not signed our Contributor Licence Agreement (CLA), our bot will prompt you to do so when you open a Pull Request. For any questions about the CLA process, please refer to our [FAQ](https://cla.vmware.com/faq).
 
