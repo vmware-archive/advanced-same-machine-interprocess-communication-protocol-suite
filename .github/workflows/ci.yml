@@ -31,7 +31,7 @@ jobs:
 
     - name: Upload Unit Test Coverage
       run: (cd ./build/src/ &&  bash <(curl -s https://codecov.io/bash) -t  ${{ secrets.CODECOV }} -v)
-  
+
   Build-Test-Cpp-Release:
     runs-on: ubuntu-latest
 
@@ -50,4 +50,42 @@ jobs:
       run: cmake --build ./build --config Release
 
     - name: System Test
-      run: (cd ./build/system_tests && make test)
+      run: (cd ./build/system_tests && ctest --timeout 180)
+
+    - name: Perf Test 1 Reader 1 Writer
+      run: (cd ./build/system_tests/burst && export TORONI_BENCH11=1 && ./bench-table.sh)
+
+  Build-Test-Java:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ${{github.workspace}}/java
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'adopt'
+
+    - name: Build
+      run: mvn install -DskipTests
+
+    - name: Setup multicast
+      run: (cd ${{github.workspace}}/interop-tests && sudo bash setup-multicast.sh)
+
+#    - name: Setup upterm session
+#      uses: lhotari/action-upterm@v1
+
+    - name: Unit Test
+      run: mvn test
+
+    - name: System Test
+      run: (export TORONI_SRC_ROOT=${{github.workspace}} && cd ${{github.workspace}}/java/system_tests/src/main/java/com/vmware/toroni/system_tests && cmake -S . -B ./build && cmake --build ./build && cd build && ctest --timeout 180)
+
+    - name: Perf Test 1 Reader 1 Writer
+      run: (export TORONI_SRC_ROOT=${{github.workspace}} && cd ${{github.workspace}}/java/system_tests/src/main/java/com/vmware/toroni/system_tests && export TORONI_BENCH11=1 && ./bench-table.sh)
+
+    - name: Interop Test (cpp-java)
+      run:  (cd ${{github.workspace}} && docker run --privileged $(docker build -q -f ./interop-tests/cpp-java.Dockerfile .))

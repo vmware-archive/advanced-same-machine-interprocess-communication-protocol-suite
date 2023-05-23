@@ -45,62 +45,7 @@ Toroni is easy to plug into the threading model your project. It  does not invol
 Toroni itself is also pluggable. UDP notification is opt-in and can be replaced with other notification mechanisms. Custom backpressure strategies can be used.
 
 ## C++
-Toroni is available as C++ header-only library.
-
-### Build
-All dependencies are in a container which can be built with:
-
-#### Linux
-```sh
-cd toroni
-docker build -t toroni-cpp-buildenv ./cpp/build_env
-docker run -v `pwd`:/toroni -it toroni-cpp-buildenv bash
-```
-#### Windows
-```sh
-cd toroni
-docker build -t toroni-cpp-buildenv ./cpp/build_env
-docker run -v ${pwd}:/toroni -it toroni-cpp-buildenv bash
-```
-
-### Testing
-```sh
-# Navigate to the cpp folder
-cd toroni/cpp
-
-# Unit tests
-cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Debug
-cmake --build ./build --config Debug
-(cd ./build/unit_tests && make test)
-
-# Unit tests with code coverage
-cmake -S. -Bbuild -DENABLE_COVERAGE=ON && cmake --build build --target unit_tests unit_test-genhtml
-(cd ./build/unit_tests && make test unit_test-gcov)
-
-# System Test
-cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Release
-cmake --build ./build --config Release
-(cd ./build/system_tests && make test)
-
-# Documentation
-cmake -S. -Bbuild -Dp_build_doc=ON && cmake --build build --target docs_doxygen
-```
-
-### Development
-If using VS code as IDE, you can leverage the [VS Code Remote-Containers extension]( https://code.visualstudio.com/docs/remote/containers) with the Toroni Dev Container configuration. This will use the above dockerfile and install all necessary VS Code extensions in the remote container.
-
-In order for the container to be detected you need to open the cpp folder within VS code and an option to reopen it in the container will appear in the bottom right corner (as long as you have [VS Code Remote-Containers extension]( https://code.visualstudio.com/docs/remote/containers) installed).
-
-### Directory Structure
-- [cpp](./cpp): Toroni c++ implementation
-   - [src](./cpp/src): header-only implementatoin
-   - [unit_tests](./cpp/unit_tests): unit tests
-   - [system_tests](./cpp/system_tests): system tests
-   - [benchmark_tests](./cpp/system_tests): system tests
-   - [build_env](./cpp/build_env) container with build environment
-   - [.devcontainer](./cpp/.devcontainer/) VS Code remote container settings
-The detail dirs contain implementation details not indended to be used by clients. The traits dir contain default implementations of types that need to be included explicitly and are used by Toroni and which can be replaced by clients with custom implementations.
-
+Toroni is available as [C++ header-only library](./cpp/README.md).
 ## Contributing
 The Advanced Same Machine Interprocess Communication Protocol Suite project team welcomes contributions from the community. Before you start working with this project please read and sign our Contributor License Agreement (https://cla.vmware.com/cla/1/preview). If you wish to contribute code and you have not signed our Contributor Licence Agreement (CLA), our bot will prompt you to do so when you open a Pull Request. For any questions about the CLA process, please refer to our [FAQ](https://cla.vmware.com/faq).
 

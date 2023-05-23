@@ -1,0 +1,23 @@
+{
+  "name": "Toroni Java Dev Container",
+  "context": "../..",
+  "dockerFile": "../build_env/Dockerfile",
+  "build": {
+    "target": "java-dev"
+  },
+  "settings": {
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true
+  },
+  "extensions": [
+    "vscjava.vscode-java-pack"
+  ],
+  // Limit the number of cores to resemble github worker 2 cpus
+  //"runArgs": [
+  //  "--cpuset-cpus=0,1"
+  //]
+  // Java needs time (more messages and memory) to warm up. Increase the shm limit.
+  "runArgs": [
+    "--shm-size=128m"
+  ],
+}
